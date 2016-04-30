@@ -216,6 +216,8 @@
 							if(scope.onOpen) scope.onOpen();
 							if(scope.callbacks.onOpen) scope.callbacks.onOpen();
 						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
+						
+						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
 					
 					/* Close modal */
@@ -240,6 +242,8 @@
 								}
 							});
 						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
+						
+						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
 					
 					/* Get modal states */
