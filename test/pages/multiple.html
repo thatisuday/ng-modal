@@ -1,0 +1,28 @@
+<div>
+	<h1>{{msg1}}</h1>
+	<button ng-click="modalControls1.open();">Open Modal 1</button>
+	
+	<div ng-modal class="_70 _padding  _flat _forest" options="modalOptions1" controls="modalControls1" callbacks="modalCallbacks1">
+		<h1 style="margin:0; padding:0;">{{msg1}}</h1>
+		<button ng-click="modalControls1.close();">Close Modal 1</button>
+		<button ng-click="modalControls2.open();">Open Modal 2</button>
+	</div>
+</div>
+
+<br/>
+
+<div>
+	<h1>{{msg2}}</h1>
+	<button ng-click="modalControls2.open();">Open Modal 2</button>
+	
+	<div ng-modal class="_60 _padding" options="modalOptions2" controls="modalControls2" callbacks="modalCallbacks2">
+		<h1 style="margin:0; padding:0;">{{msg2}}</h1>
+		<button ng-click="modalControls2.close();">Close Modal 2</button>
+		<button ng-click="modalControls3.open();">Open Modal 3</button>
+	</div>
+	
+	<div ng-modal class="_40 _padding" options="modalOptions3" controls="modalControls3" callbacks="modalCallbacks3">
+		<h1>{{msg2}}</h1>
+		<button ng-click="modalControls3.close();">Close Modal 3</button>
+	</div>
+</div>

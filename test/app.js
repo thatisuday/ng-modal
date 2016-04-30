@@ -6,32 +6,46 @@
  * https://www.github.com/thatisuday/ngModal
  */
  
-var testApp = angular.module('testApp', ['thatisuday.modal']).config(function($locationProvider){
-	$locationProvider.html5Mode(true);
+var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(function($routeProvider, $locationProvider){	
+	$routeProvider
+	.when('/options', {
+		templateUrl : 'pages/options.html',
+		controller : 'optionsCtrl'
+	})
+	.when('/multiple', {
+		templateUrl : 'pages/multiple.html',
+		controller : 'multipleModalCtrl'
+	})
+	.otherwise({
+		redirectTo : '/multiple'
+	});
 });
 
 
 
 
 /*
- * Test controller
+ * Multiple modal controller
 **/
-testApp.controller('testCtrl', ['$scope', function($scope){	
-	$scope.msg1 = 'Hello 1 World!';
+testApp.controller('multipleModalCtrl', ['$scope', function($scope){	
+	$scope.msg1 = 'I am modal 1 message from controller.';
 	$scope.modalOptions1 = {
 		closable : true,
-		animDuration : 500,
-		url : '/product/_abc_zyx_123/my-product-name'
+		animDuration : 500
 	};
 	
 	
-	
-	$scope.msg2 = 'Hello 2 World!';
+	$scope.msg2 = 'I am modal 2 message from controller.';
 	$scope.modalOptions2 = {
 		animation : false,
 		closable : false,
-		compactClose : true,
-		animDuration : 500,
-		url : '/product/_abc_zyx_4444/my-product-name'
+		compactClose : true
+	};
+	
+	
+	$scope.msg3 = 'I am modal 3 message from controller.';
+	$scope.modalOptions3 = {
+		closable : false,
+		compactClose : true
 	};
 }]);

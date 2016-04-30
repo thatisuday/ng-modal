@@ -8,6 +8,13 @@
  (function(){
 	'use strict';
 	
+	var keys = {
+		enter : 13,
+		esc   : 27,
+		left  : 37,
+		right : 39
+	};
+	
 	angular.module('thatisuday.modal', ['ngRoute']).provider('ngModalOps', function(){
 		/*
 		 *	Add default options here
@@ -33,7 +40,7 @@
 			}
 		}
 	})
-	.directive('ngModal', ['$timeout', '$q', '$document', '$window', '$location', 'ngModalOps', function($timeout, $q, $document, $window, $location, ngModalOps){
+	.directive('ngModal', ['$timeout', '$q', '$document', '$window', 'ngModalOps', function($timeout, $q, $document, $window, ngModalOps){
 		return {
 			restrict : 'AE',
 			transclude : true,
@@ -53,12 +60,6 @@
 				onClose : "&"
 			},
 			compile : function(tElem, tAttr){
-				var keys = {
-					enter : 13,
-					esc   : 27,
-					left  : 37,
-					right : 39
-				};
 				
 				return function(scope, iElem, iAttr){
 					var iElemNode = iElem[0],
@@ -98,7 +99,7 @@
 						var dim = getModalDim();
 						if(dim.iElemBodyWidth < dim.windowWidth || dim.iElemBodyHeight < dim.windowWidth){
 							iElemClose.css({
-								'left' : ((dim.windowWidth + dim.iElemBodyWidth) / 2 + 15)+ 'px',
+								'right' : ((dim.windowWidth - dim.iElemBodyWidth) / 2 - 25)+ 'px',
 								'top' : ((dim.windowHeight - dim.iElemBodyHeight) / 2 - 30)+ 'px'
 							});
 						}
@@ -107,8 +108,10 @@
 					
 					
 					
+					
+					
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					// Modal states
+					// 				Modal states
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					scope.states = {
 						isTouched : false,
@@ -116,14 +119,16 @@
 						isClosed : true
 					};
 					scope.$watchCollection('states', function(newStates){
-						//Maintain isOpened vs isClosed states
-						scope.states.isClosed = !newStates.isOpened;
+						scope.states.isClosed = !newStates.isOpened; //Maintain isOpened/isClosed states
 					});
 					
 					
 					
+					
+					
+					
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					// Perform options actions
+					// 			Perform options actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					var initOps = angular.extend({}, ngModalOps, scope.options);
 					
@@ -148,8 +153,11 @@
 					
 					
 					
+					
+					
+					
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					// Modal control actions
+					// 				Modal control actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					scope.controls = scope.controls || {};
 					scope.callbacks = scope.callbacks || {};
@@ -209,8 +217,11 @@
 					
 					
 					
+					
+					
+					
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					// Browser actions
+					// 				Browser actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					
 					/* Window key press */
