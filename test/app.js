@@ -31,6 +31,20 @@ testApp.controller('multipleModalCtrl', ['$scope', function($scope){
 		width:'600px',
 		height:'auto'
 	};
+	$scope.modalCallbacks1 = {};
+	$scope.modalCallbacks1.onOpen = function(){
+		console.log('Modal opened.');
+	}
+	$scope.modalCallbacks1.onClose = function(){
+		console.log('Modal closed.');
+	}
+	
+	$scope.modal1OnOpen = function(){
+		console.log('Modal opened. Inline callback.');
+	}
+	$scope.modal1OnClose = function(){
+		console.log('Modal closed. Inline callback.');
+	}
 	
 	
 	$scope.msg2 = 'I am modal 2 message from controller.';

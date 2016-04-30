@@ -2,7 +2,7 @@
 	<h1>{{msg1}}</h1>
 	<button ng-click="modalControls1.open();">Open Modal 1</button>
 	
-	<div ng-modal options="modalOptions1" controls="modalControls1" callbacks="modalCallbacks1">
+	<div ng-modal options="modalOptions1" controls="modalControls1" callbacks="modalCallbacks1" on-open="modal1OnOpen();" on-close="modal1OnClose();">
 		<h1>{{msg1}}</h1>
 		<button ng-click="modalControls1.close();">Close Modal 1</button>
 		<button ng-click="modalControls2.open();">Open Modal 2</button>

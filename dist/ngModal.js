@@ -67,8 +67,8 @@
 				options : '=?',
 				controls : '=?',
 				callbacks : '=?',
-				onOpen : "&",
-				onClose : "&"
+				onOpen : "&?",
+				onClose : "&?"
 			},
 			compile : function(tElem, tAttr){
 				
