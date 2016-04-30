@@ -146,7 +146,8 @@ $scope.modalOnClose = function(){
 # Best practices
 1. Modals can be opened on top of each other. But use `zIndex` option to put them on top of each other else they will be shown in order of their DOM appearances.
 2. Do not nest one modal inside other, **it does not animate well**. Else set `animation` option to `false`.
-
+3. Play with **[Animate.css](https://daneden.github.io/animate.css/)** but do not add exit animation-class like `zoomOut` in entry animation-class option like `animBodyIn`.
+4. Use `flat` option for Flat UI modal, set `borderRadius` option to `0px` for good UI. `backdrop`, `compactClose` options will be useless in this case.
 
 # Complaints & Contribute
 Create an issue and mention your commits there. Don't take a fork.
