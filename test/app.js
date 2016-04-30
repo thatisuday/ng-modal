@@ -8,10 +8,6 @@
  
 var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(function($routeProvider, $locationProvider){	
 	$routeProvider
-	.when('/options', {
-		templateUrl : 'pages/options.html',
-		controller : 'optionsCtrl'
-	})
 	.when('/multiple', {
 		templateUrl : 'pages/multiple.html',
 		controller : 'multipleModalCtrl'
@@ -31,7 +27,9 @@ testApp.controller('multipleModalCtrl', ['$scope', function($scope){
 	$scope.msg1 = 'I am modal 1 message from controller.';
 	$scope.modalOptions1 = {
 		closable : true,
-		animDuration : 500
+		animDuration : 500,
+		width:'600px',
+		height:'auto'
 	};
 	
 	
@@ -39,13 +37,19 @@ testApp.controller('multipleModalCtrl', ['$scope', function($scope){
 	$scope.modalOptions2 = {
 		animation : false,
 		closable : false,
-		compactClose : true
+		compactClose : true,
+		closeIcon : 'ion-close-circled',
+		flat : 'forest'
 	};
 	
 	
 	$scope.msg3 = 'I am modal 3 message from controller.';
 	$scope.modalOptions3 = {
 		closable : false,
-		compactClose : true
+		compactClose : true,
+		width:'600px',
+		height:'300px',
+		padding:'50px 30px',
+		borderRadius:'5px'
 	};
 }]);

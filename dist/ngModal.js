@@ -15,7 +15,7 @@
 		right : 39
 	};
 	
-	angular.module('thatisuday.modal', ['ngRoute']).provider('ngModalOps', function(){
+	angular.module('thatisuday.modal', []).provider('ngModalOps', function(){
 		/*
 		 *	Add default options here
 		**/
@@ -23,6 +23,18 @@
 			type : 'normal',
 			closable : true,
 			compactClose : false,
+			fullscreen : false,
+			closeIcon : '_cross',
+			
+			width : '700px',
+			height : '400px',
+			padding:'20px 30px',
+			borderRadius:'3px',
+			top:'50%',
+			left:'50%',
+			backdrop : 'rgba(0,0,0,0.75)',
+			zIndex:'9999',
+			
 			animation : true,
 			animDropIn : 'fadeIn',
 			animDropOut : 'fadeOut',
@@ -46,9 +58,8 @@
 			transclude : true,
 			template : '\
 				<div class="ngModal animated" ng-class="{_active:states.isOpened, _hidden:states.isClosed}">\
-					<div class="_close _cross" ng-click="controls.close();"></div>\
-					<div class="_body animated" ng-transclude>\
-					</div>\
+					<div class="_close" ng-click="controls.close();"></div>\
+					<div class="_body animated" ng-transclude></div>\
 				</div>\
 			',
 			replace : true,
@@ -63,11 +74,11 @@
 				
 				return function(scope, iElem, iAttr){
 					var iElemNode = iElem[0],
-						iElemBodyNode = iElem[0].getElementsByClassName('_body')[0],
+						iElemBodyNode = iElem[0].querySelector('._body'),
 						iElemBody = angular.element(iElemBodyNode),
-						iElemCloseNode = iElem[0].getElementsByClassName('_close')[0],
+						iElemCloseNode = iElem[0].querySelector('._close'),
 						iElemClose = angular.element(iElemCloseNode),
-						getModalDim = function(){
+						getDim = function(){
 							return {
 								windowWidth : window.innerWidth,
 								windowHeight : window.innerHeight,
@@ -78,8 +89,8 @@
 					;
 					
 					// Adjust modal body position in middle
-					var iElemBodyAdjust = function(){
-						var dim = getModalDim();
+					var modalBodyAdjust = function(){
+						var dim = getDim();
 						
 						if(dim.iElemBodyWidth < dim.windowWidth){
 							iElemBody.css({'left':'50%', 'margin-left':'-' + (dim.iElemBodyWidth/2) + 'px'});
@@ -96,7 +107,7 @@
 					
 					// Adjust close button position
 					var closeBtnAdjust = function(){
-						var dim = getModalDim();
+						var dim = getDim();
 						if(dim.iElemBodyWidth < dim.windowWidth || dim.iElemBodyHeight < dim.windowWidth){
 							iElemClose.css({
 								'right' : ((dim.windowWidth - dim.iElemBodyWidth) / 2 - 25)+ 'px',
@@ -137,22 +148,43 @@
 						iElem.css({'cursor':'pointer'});
 						iElem.bind('click', function(event){
 							if(event.target != iElemBodyNode && !iElemBodyNode.contains(event.target)){
-								scope.$apply(function(){
-									scope.controls.close();
-								});
+								scope.controls.close();
 							}
 						});
 					}
 					
+					/* Set close icon */
+					if(initOps.closeIcon) iElemClose.addClass(initOps.closeIcon);
+					
 					/* Set animation duration */
-					if(initOps.animDuration){
+					if(initOps.animation && initOps.animDuration){
 						var animDurationSec = initOps.animDuration/1000 + 's';
 						iElem.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
 						iElemBody.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
 					}
 					
+					/* Set basic css style */
+					if(initOps.backdrop) iElem.css({'background-color':initOps.backdrop});
+					if(initOps.zIndex) iElem.css({'z-index':initOps.zIndex});
 					
+					if(initOps.width) iElemBody.css({'width':initOps.width});
+					if(initOps.height) iElemBody.css({'height':initOps.height});
+					if(initOps.padding) iElemBody.css({'padding':initOps.padding});
+					if(initOps.borderRadius) iElemBody.css({'border-radius':initOps.borderRadius});
+					if(initOps.top) iElemBody.css({'top':initOps.top});
+					if(initOps.left) iElemBody.css({'left':initOps.left});
 					
+					/* Full screen modal */
+					if(initOps.fullscreen){
+						initOps.compactClose = false;
+						iElemBody.css({'width':'100%', 'min-height':'100%', 'height':'auto', 'top':'0', 'left':'0', 'border-radius':'0px'});
+						iElemClose.css({'color':'#333'});
+					}
+					
+					/* Flat modal */
+					if(initOps.flat){
+						iElem.addClass('_flat _' + initOps.flat);
+					}
 					
 					
 					
@@ -176,7 +208,7 @@
 						}
 						
 						$timeout(function(){ //Set modal body position
-							iElemBodyAdjust();
+							modalBodyAdjust();
 							if(initOps.compactClose) closeBtnAdjust(); /* Compact close button */
 						});
 						
@@ -234,7 +266,7 @@
 					/* Window resize */
 					angular.element($window).bind('resize', function(){
 						if(scope.states.isOpened){
-							iElemBodyAdjust();
+							modalBodyAdjust();
 							if(initOps.compactClose) closeBtnAdjust(); /* Compact close button */
 						}
 					});
