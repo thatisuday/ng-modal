@@ -1,0 +1,169 @@
+/**
+ * AngularJS modal directive (css stylesheet)
+ * @author Uday Hiwarale <uhiwarale@gmail.com>
+ * https://www.github.com/thatisuday/ngModal
+**/
+
+/* Implement UTF-8 charset */
+@charset "UTF-8";
+
+/* Body overflow hidden when ngModal is active */
+body.ngModalVisible{
+	overflow:hidden!important;
+}
+
+
+.ngModal{
+	position:fixed;
+	left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	color:#111;
+	background-color:rgba(0,0,0,0.75);
+	overflow-x:auto;
+	overflow-y:auto;
+	z-index:9999;
+}
+
+
+
+/**************************************************/
+/************* Modal Close Button ****************/
+/**************************************************/
+.ngModal ._close{
+	font-size:18px;
+	color:#fff;
+	position:fixed;
+	top:10px;
+	right:20px;
+	z-index:2;
+}
+.ngModal ._close._cross:before{
+	content:"\26CC";
+	cursor:pointer;
+}
+
+
+/**************************************************/
+/*************** Modal Body ***********************/
+/**************************************************/
+
+.ngModal ._body{
+	position:absolute;
+	z-index:1;
+	background-color:#fff;
+	width:600px;
+	min-height:200px;
+	box-sizing: border-box;
+	border-radius:3px;
+	overflow:hidden;
+	cursor:default;
+	
+	/* Center align */
+	top:50%;
+	left:50%;
+}
+
+/* Body width */
+.ngModal._100 ._body{width:100%;}
+.ngModal._90 ._body{width:90%;}
+.ngModal._80 ._body{width:80%;}
+.ngModal._70 ._body{width:70%;}
+.ngModal._60 ._body{width:60%;}
+.ngModal._50 ._body{width:50%;}
+.ngModal._40 ._body{width:40%;}
+.ngModal._30 ._body{width:30%;}
+.ngModal._20 ._body{width:20%;}
+.ngModal._10 ._body{width:10%;}
+.ngModal._33 ._body{width:33.33%;}
+.ngModal._66 ._body{width:66.66%;}
+
+
+
+
+
+/**************************************************/
+/*************** Modal Styles *********************/
+/**************************************************/
+
+/* Modal hidden */
+.ngModal._hidden {
+	display:none;
+}
+
+/* Modal active */
+.ngModal._active {
+	display:block;
+}
+
+
+/* Modal padding */
+.ngModal._padding ._body{
+	padding:20px 25px;
+}
+
+/* Sharp corners */
+.ngModal._corners ._body{
+	border-radius:0px;
+}
+
+/* Modal full screen */
+.ngModal._fullscreen{
+	overflow-x:hidden;
+	overflow-y:hidden;
+}.ngModal._fullscreen ._body{
+	width:100%;
+	min-height:100%;
+	height:auto;
+	top:0;
+	left:0;
+}.ngModal._fullscreen ._close{
+	color:#333;
+}
+
+/* Modal inverted */
+.ngModal._inverted{
+	color:#fff;
+	background-color:rgba(255,255,255,0.75);
+}.ngModal._inverted ._body{
+	background-color:#333;
+}.ngModal._inverted ._close{
+	color:#ccc;
+}
+
+/* Modal Flat colors */
+.ngModal._flat{background-color:#8BC34A;}
+.ngModal._flat._red{background-color:#FF5722;}
+.ngModal._flat._lynch{background-color:#607D8B;}
+.ngModal._flat._brown{background-color:#795548;}
+.ngModal._flat._orange{background-color:#FF9800;}
+.ngModal._flat._amber{background-color:#FFC107;}
+.ngModal._flat._yellow{background-color:#FFEB3B;}
+.ngModal._flat._pear{background-color:#CDDC39;}
+.ngModal._flat._forest{background-color:#8BC34A;}
+.ngModal._flat._green{background-color:#4CAF50;}
+.ngModal._flat._persian_green{background-color:#009688;}
+.ngModal._flat._egg_blue{background-color:#00BCD4;}
+.ngModal._flat._cerulean_cerulean{background-color:#03A9F4;}
+.ngModal._flat._dodger_blue{background-color:#2196F3;}
+.ngModal._flat._san_marino{background-color:#3F51B5;}
+.ngModal._flat._purple{background-color:#673AB7;}
+.ngModal._flat._seance{background-color:#9C27B0;}
+.ngModal._flat._smaranth{background-color:#E91E63;}
+.ngModal._flat._pomegranate{background-color:#F44336;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
