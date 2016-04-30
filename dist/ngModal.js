@@ -8,7 +8,7 @@
  (function(){
 	'use strict';
 	
-	angular.module('thatisuday.modal', []).provider('ngModalOps', function(){
+	angular.module('thatisuday.modal', ['ngRoute']).provider('ngModalOps', function(){
 		/*
 		 *	Add default options here
 		**/
@@ -32,7 +32,8 @@
 				return defOps;
 			}
 		}
-	}).directive('ngModal', ['$timeout', '$q', '$document', '$window', 'ngModalOps', function($timeout, $q, $document, $window, ngModalOps){
+	})
+	.directive('ngModal', ['$timeout', '$q', '$document', '$window', '$location', 'ngModalOps', function($timeout, $q, $document, $window, $location, ngModalOps){
 		return {
 			restrict : 'AE',
 			transclude : true,
@@ -120,7 +121,6 @@
 					});
 					
 					
-
 					
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// Perform options actions
@@ -148,7 +148,6 @@
 					
 					
 					
-					
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// Modal control actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,49 +157,53 @@
 					/* Open modal */
 					scope.controls.open = function(){
 						if(scope.states.isOpened) return;
-						
 						scope.states.isOpened = true;
 						scope.states.isTouched = true;
+						
 						$document.find('body').addClass('ngModalVisible'); //Disable document scroll
 						
-						//Animations
-						if(initOps.animation){
+						if(initOps.animation){ //Animations
 							iElem.removeClass(initOps.animDropOut).addClass(initOps.animDropIn);
 							iElemBody.removeClass(initOps.animBodyOut).addClass(initOps.animBodyIn);
 						}
 						
-						//Set modal body position
-						$timeout(function(){
+						$timeout(function(){ //Set modal body position
 							iElemBodyAdjust();
 							if(initOps.compactClose) closeBtnAdjust(); /* Compact close button */
 						});
 						
-						$timeout(function(){
+						$timeout(function(){ //Event callbacks
 							if(scope.onOpen) scope.onOpen();
 							if(scope.callbacks.onOpen) scope.callbacks.onOpen();
-						}, initOps.animDuration); //After animation complete
+						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
 					};
 					
 					/* Close modal */
 					scope.controls.close = function(){
 						if(!scope.states.isOpened) return;
 						
-						//Animations
-						if(initOps.animation){
+						if(initOps.animation){ //Animations
 							iElem.removeClass(initOps.animDropIn).addClass(initOps.animDropOut);
 							iElemBody.removeClass(initOps.animBodyIn).addClass(initOps.animBodyOut);
 						}
 						
 						$timeout(function(){
-							$document.find('body').removeClass('ngModalVisible'); //Enable document scroll
 							scope.states.isOpened = false;
+							
+							//Event callbacks
 							if(scope.onClose) scope.onClose();
 							if(scope.callbacks.onClose) scope.callbacks.onClose();
-						}, initOps.animDuration); //After animation complete
+							
+							$timeout(function(){
+								if(document.getElementsByClassName('ngModal _active').length === 0){
+									$document.find('body').removeClass('ngModalVisible'); //Enable document scroll
+								}
+							});
+						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
 					};
 					
 					/* Get modal states */
-					scope.controls.states = function(){
+					scope.controls.getStates = function(){
 						return scope.states;
 					};
 					
