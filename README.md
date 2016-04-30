@@ -1,2 +1,4 @@
 # ngModal
-AngularJS Modal Directive - The only modal you will ever need
+AngularJS Modal Directive - Simple and highly customizable modal with Gallery support.
+
+
