@@ -58,7 +58,7 @@ var testApp = angular.module('testApp', ['thatisuday.modal']).config(function(ng
 });
 ```
 #### 2. Using **_modalOptions_** model
-If you see _Directive Code Structure_ above, you can see `options` attribute with value `modalOptions`. **modalOptions** is a model that must be bound to parent scope which *provides options* for your modal. For example, `$scope.modalOptions = {bla:bleh,...}`
+If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above, you can see `options` attribute with value `modalOptions`. **modalOptions** is a model that must be bound to parent scope which *provides options* for your modal. For example, `$scope.modalOptions = {bla:bleh,...}`
 
 | Option                | Ex. value    | What it does?  |
 | --------------------- |------------- | -------------- |
@@ -91,7 +91,7 @@ $scope.modalOptions = {
 ```
 
 ## Controls (Methods)
-If you see _Directive Code Structure above_, you can see `controls` attribute with value `modalControls`. **modalControls** is a model that must be bound to parent scope which *provides a gateway* to control model actions. For example,
+If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above, you can see `controls` attribute with value `modalControls`. **modalControls** is a model that must be bound to parent scope which *provides a gateway* to control model actions. For example,
 ```
 //In view
 <button ng-click="modalControls.open();">Open Modal</button>
@@ -113,7 +113,7 @@ $scope.modalControls.open();
 
 
 ## Events (Callbacks)
-If you see _Directive Code Structure above_, you can see `callbacks` attribute with value `modalCallbacks`. **modalCallbacks** is a model that must be bound to parent scope which *feeds callback methods* to be executed after some event occurs. For example,
+If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above, you can see `callbacks` attribute with value `modalCallbacks`. **modalCallbacks** is a model that must be bound to parent scope which *feeds callback methods* to be executed after some event occurs. For example,
 
 ```
 //In controller
@@ -131,7 +131,7 @@ $scope.modalCallbacks.onClose = function(){
 | onOpen | When modal opens
 | onClose | When modal closes
 
-**onOpen** and **OnClose** callbacks can also execute functions from inline `on-open` and `on-close` attributes, see _Directive Code Structure above_. For example, 
+**onOpen** and **OnClose** callbacks can also execute functions from inline `on-open` and `on-close` attributes, see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above. For example, 
 
 ```
 //In controller
