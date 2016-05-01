@@ -21,10 +21,10 @@
 		**/
 		var defOps = {
 			type : 'normal',
-			closable : true,
+			closable : false,
 			compactClose : false,
 			fullscreen : false,
-			closeIcon : '_cross',
+			closeIcon : '_cross_icon',
 			
 			width : '700px',
 			height : '400px',
@@ -33,6 +33,7 @@
 			top:'50%',
 			left:'50%',
 			backdrop : 'rgba(0,0,0,0.75)',
+			background : '#fff',
 			zIndex:'9999',
 			
 			animation : true,
@@ -40,7 +41,10 @@
 			animDropOut : 'fadeOut',
 			animBodyIn : 'zoomIn',
 			animBodyOut : 'fadeOut',
-			animDuration : 300
+			animDuration : 300,
+			
+			thumbs : true,
+			thumbsLength : 5
 		};
 		
 		return {
@@ -59,7 +63,6 @@
 			template : '\
 				<div class="ngModal animated" ng-class="{_active:states.isOpened, _hidden:states.isClosed}">\
 					<div class="_close" ng-click="controls.close();"></div>\
-					<div class="_body animated" ng-transclude></div>\
 				</div>\
 			',
 			replace : true,
@@ -67,54 +70,155 @@
 				options : '=?',
 				controls : '=?',
 				callbacks : '=?',
+				gallery : '=?',
 				onOpen : "&?",
 				onClose : "&?"
 			},
 			compile : function(tElem, tAttr){
+				if(!tAttr.gallery){
+					tElem.append('<div class="_body animated" ng-transclude></div>');
+				}
+				else if(tAttr.gallery){
+					tElem.append('\
+						<div class="_body _gallery animated">\
+							<img ng-if="imageLoaded" ng-src="{{currentImg}}" class="animated" ng-class="{fadeIn:imageAnimted, _hidden:!imageAnimted}" />\
+							<div ng-if="!imageLoaded" class="_spinner"></div>\
+						</div>\
+						<div ng-if="initOps.thumbs" class="_thumbnails_conatainer" style="width:{{initOps.thumbsLength*40}}px;">\
+							<div class="_thumbnails" style="margin-left:{{thumbScroll}}px;">\
+								<div ng-repeat="img in gallery" ng-class="{current:($index == currImgIndex)}" ng-click="showImage($index);" style="background-image:url({{img.thumbURL || img.imgURL}});"></div>\
+							</div>\
+						</div>\
+						<div class="_prev _prev_icon" ng-click="prevImage();"></div>\
+						<div class="_next _next_icon" ng-click="nextImage();"></div>\
+					');
+				}
+				
 				
 				return function(scope, iElem, iAttr){
-					var iElemNode = iElem[0],
-						iElemBodyNode = iElem[0].querySelector('._body'),
-						iElemBody = angular.element(iElemBodyNode),
-						iElemCloseNode = iElem[0].querySelector('._close'),
-						iElemClose = angular.element(iElemCloseNode),
+					
+					//Basic functions
+					var 
+						$modal = iElem,
+						modal = $modal[0],
+						mBody = $modal[0].querySelector('._body'),
+						$mBody = angular.element(mBody),
+						mClose = $modal[0].querySelector('._close'),
+						$mClose = angular.element(mClose),
 						getDim = function(){
 							return {
 								windowWidth : window.innerWidth,
 								windowHeight : window.innerHeight,
-								iElemBodyWidth : iElemBodyNode.offsetWidth,
-								iElemBodyHeight : iElemBodyNode.offsetHeight
+								iElemBodyWidth : mBody.offsetWidth,
+								iElemBodyHeight : mBody.offsetHeight
+							}
+						},
+						mBodyResize = function(){ // Adjust modal body position
+							var dim = getDim();
+							if(dim.iElemBodyWidth < dim.windowWidth){
+								$mBody.css({'left':'50%', 'margin-left':'-' + (dim.iElemBodyWidth/2) + 'px'});
+							} else{ $mBody.css({'left':'0', 'margin-left':'0'}); }
+							
+							if(dim.iElemBodyHeight < dim.windowHeight){
+								$mBody.css({'top':'50%', 'margin-top':'-' + (dim.iElemBodyHeight/2) + 'px'});
+							} else{ $mBody.css({'top':'0', 'margin-top':'0'}); }
+						},
+						mCloseSetPos = function(){ // Adjust close icon position
+							var dim = getDim();
+							if(dim.iElemBodyWidth < dim.windowWidth || dim.iElemBodyHeight < dim.windowWidth){
+								$mClose.css({
+									'right' : ((dim.windowWidth - dim.iElemBodyWidth) / 2 - 25)+ 'px',
+									'top' : ((dim.windowHeight - dim.iElemBodyHeight) / 2 - 30)+ 'px'
+								});
 							}
 						}
 					;
 					
-					// Adjust modal body position in middle
-					var modalBodyAdjust = function(){
-						var dim = getDim();
-						
-						if(dim.iElemBodyWidth < dim.windowWidth){
-							iElemBody.css({'left':'50%', 'margin-left':'-' + (dim.iElemBodyWidth/2) + 'px'});
-						} else{
-							iElemBody.css({'left':'0', 'margin-left':'0'});
-						}
-						
-						if(dim.iElemBodyHeight < dim.windowHeight){
-							iElemBody.css({'top':'50%', 'margin-top':'-' + (dim.iElemBodyHeight/2) + 'px'});
-						} else{
-							iElemBody.css({'top':'0', 'margin-top':'0'});
-						}
-					}
 					
-					// Adjust close button position
-					var closeBtnAdjust = function(){
-						var dim = getDim();
-						if(dim.iElemBodyWidth < dim.windowWidth || dim.iElemBodyHeight < dim.windowWidth){
-							iElemClose.css({
-								'right' : ((dim.windowWidth - dim.iElemBodyWidth) / 2 - 25)+ 'px',
-								'top' : ((dim.windowHeight - dim.iElemBodyHeight) / 2 - 30)+ 'px'
-							});
+					//Gallery functions
+					scope.loadImage = function(index){
+						var defer = $q.defer();
+						
+						scope.states.imgLoading = true; //Add a modal state
+						scope.imageAnimted = false; //For image load animation
+						
+						//Prevent loading of cached images
+						if(scope.gallery[index].cached && scope.gallery[index].cached === true){
+							defer.resolve(index);
+							return defer.promise;
 						}
-					}
+						
+						var image = new Image();
+						image.src = scope.gallery[index].imgURL;
+						
+						image.onload = function(){
+							scope.gallery[index].cached = true;
+							defer.resolve(index); //Resolve loadImage promise
+						};
+						image.onerror = function(){
+							defer.reject(index); //Reject loadImage promise
+						};
+						
+						scope.imageLoaded = false;
+						return defer.promise;
+					};
+					
+					scope.showImage = function(index){ //Show gallery image
+						var defer = $q.defer();
+						
+						scope.currImgIndex = index || 0;
+						scope.loadImage(scope.currImgIndex).then(function(index){
+							scope.currentImg = scope.gallery[index].imgURL;
+							$timeout(function(){
+								defer.resolve(); //Resolve showImage promise
+								
+								scope.states.imgLoading = false; //Add a modal state
+								scope.imageLoaded = true;
+								$timeout(function(){ scope.imageAnimted = true; }, 10);
+								
+								//Scroll thumbnails
+								scope.thumbScroll = scope.thumbScroll || 0;
+								if(scope.gallery.length > scope.initOps.thumbsLength){
+									if((scope.currImgIndex + 2) > scope.initOps.thumbsLength){
+										if((scope.currImgIndex + 1) != scope.gallery.length){
+											scope.thumbScroll = -40 * ((scope.currImgIndex + 2) - scope.initOps.thumbsLength);
+										}
+									}
+									else if(scope.currImgIndex < scope.initOps.thumbsLength){
+										scope.thumbScroll = 0;
+									}
+								}
+							});
+							
+							if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
+						});
+						
+						return defer.promise;
+					};
+					
+					scope.prevImage = function(){
+						scope.currImgIndex = (scope.currImgIndex == 0) ? scope.gallery.length -1 : scope.currImgIndex - 1;
+						
+						scope.showImage(scope.currImgIndex).then(function(){
+							//Callback for previous image load complete
+							$timeout(function(){if(scope.callbacks.onPrevDone) scope.callbacks.onPrevDone();});
+						});
+						
+						//Callback for previous image load initiated
+						$timeout(function(){if(scope.callbacks.onPrev) scope.callbacks.onPrev();});
+					};
+					
+					scope.nextImage = function(){
+						scope.currImgIndex = (scope.currImgIndex == scope.gallery.length - 1) ? 0 : scope.currImgIndex + 1;
+						
+						scope.showImage(scope.currImgIndex).then(function(){
+							//Callback for next image load complete
+							$timeout(function(){if(scope.callbacks.onNextDone) scope.callbacks.onNextDone();});
+						});
+						
+						//Callback for previous image load initiated
+						$timeout(function(){if(scope.callbacks.onNext) scope.callbacks.onNext();});
+					};
 					
 					
 					
@@ -127,7 +231,8 @@
 					scope.states = {
 						isTouched : false,
 						isOpened : false,
-						isClosed : true
+						isClosed : true,
+						imgLoading : false
 					};
 					scope.$watchCollection('states', function(newStates){
 						scope.states.isClosed = !newStates.isOpened; //Maintain isOpened/isClosed states
@@ -141,50 +246,59 @@
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// 			Perform options actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					var initOps = angular.extend({}, ngModalOps, scope.options);
+					scope.initOps = angular.extend({}, ngModalOps, scope.options);
 					
 					/* Modal closable on click outside of modal body */
-					if(initOps.closable){
-						iElem.css({'cursor':'pointer'});
-						iElem.bind('click', function(event){
-							if(event.target != iElemBodyNode && !iElemBodyNode.contains(event.target)){
+					if(scope.initOps.closable){
+						$modal.css({'cursor':'pointer'});
+						$modal.bind('click', function(event){
+							if(event.target != mBody && !mBody.contains(event.target)){
 								scope.controls.close();
 							}
 						});
 					}
 					
 					/* Set close icon */
-					if(initOps.closeIcon) iElemClose.addClass(initOps.closeIcon);
+					if(scope.initOps.closeIcon) $mClose.addClass(scope.initOps.closeIcon);
 					
 					/* Set animation duration */
-					if(initOps.animation && initOps.animDuration){
-						var animDurationSec = initOps.animDuration/1000 + 's';
-						iElem.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
-						iElemBody.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
-					}
+					if(scope.initOps.animation && scope.initOps.animDuration){
+						var animDurationSec = scope.initOps.animDuration/1000 + 's';
+						$modal.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
+						$mBody.css({'-webkit-animation-duration':animDurationSec, 'animation-duration':animDurationSec});
+					} else{scope.initOps.animDuration = 0;}
 					
 					/* Set basic css style */
-					if(initOps.backdrop) iElem.css({'background-color':initOps.backdrop});
-					if(initOps.zIndex) iElem.css({'z-index':initOps.zIndex});
-					
-					if(initOps.width) iElemBody.css({'width':initOps.width});
-					if(initOps.height) iElemBody.css({'height':initOps.height});
-					if(initOps.padding) iElemBody.css({'padding':initOps.padding});
-					if(initOps.borderRadius) iElemBody.css({'border-radius':initOps.borderRadius});
-					if(initOps.top) iElemBody.css({'top':initOps.top});
-					if(initOps.left) iElemBody.css({'left':initOps.left});
+					if(scope.initOps.backdrop) $modal.css({'background-color':scope.initOps.backdrop});
+					if(scope.initOps.zIndex) $modal.css({'z-index':scope.initOps.zIndex});
+					if(scope.initOps.background) $mBody.css({'background-color':scope.initOps.background});
+					if(scope.initOps.width) $mBody.css({'width':scope.initOps.width});
+					if(scope.initOps.height) $mBody.css({'height':scope.initOps.height});
+					if(scope.initOps.padding) $mBody.css({'padding':scope.initOps.padding});
+					if(scope.initOps.borderRadius) $mBody.css({'border-radius':scope.initOps.borderRadius});
+					if(scope.initOps.top) $mBody.css({'top':scope.initOps.top});
+					if(scope.initOps.left) $mBody.css({'left':scope.initOps.left});
 					
 					/* Full screen modal */
-					if(initOps.fullscreen){
-						initOps.compactClose = false;
-						iElemBody.css({'width':'100%', 'min-height':'100%', 'height':'auto', 'top':'0', 'left':'0', 'border-radius':'0px'});
-						iElemClose.css({'color':'#333'});
+					if(scope.initOps.fullscreen){
+						scope.initOps.compactClose = false;
+						$mBody.css({'width':'100%', 'min-height':'100%', 'height':'auto', 'top':'0', 'left':'0', 'border-radius':'0px'});
+						$mClose.css({'color':'#333'});
 					}
 					
 					/* Flat modal */
-					if(initOps.flat){
-						iElem.addClass('_flat _' + initOps.flat);
+					if(scope.initOps.flat){
+						$modal.addClass('_flat _' + scope.initOps.flat);
 					}
+					
+					/* Modal gallery */
+					if(iAttr.gallery && scope.gallery){
+						var dim = getDim();
+						$mBody.css({'background-color':'transparent', 'width':'calc(100% - 100px)', 'height':'calc(100% - 100px)'});
+						scope.showImage(); //Show gallery image
+					}
+					
+					
 					
 					
 					
@@ -202,20 +316,20 @@
 						
 						$document.find('body').addClass('ngModalVisible'); //Disable document scroll
 						
-						if(initOps.animation){ //Animations
-							iElem.removeClass(initOps.animDropOut).addClass(initOps.animDropIn);
-							iElemBody.removeClass(initOps.animBodyOut).addClass(initOps.animBodyIn);
+						if(scope.initOps.animation){ //Animations
+							$modal.removeClass(scope.initOps.animDropOut).addClass(scope.initOps.animDropIn);
+							$mBody.removeClass(scope.initOps.animBodyOut).addClass(scope.initOps.animBodyIn);
 						}
 						
 						$timeout(function(){ //Set modal body position
-							modalBodyAdjust();
-							if(initOps.compactClose) closeBtnAdjust(); /* Compact close button */
+							mBodyResize();
+							if(scope.initOps.compactClose) mCloseSetPos(); /* Compact close button */
 						});
 						
 						$timeout(function(){ //Event callbacks
 							if(scope.onOpen) scope.onOpen();
 							if(scope.callbacks.onOpen) scope.callbacks.onOpen();
-						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
+						}, scope.initOps.animDuration); //After animation complete
 						
 						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
@@ -224,9 +338,9 @@
 					scope.controls.close = function(){
 						if(!scope.states.isOpened) return;
 						
-						if(initOps.animation){ //Animations
-							iElem.removeClass(initOps.animDropIn).addClass(initOps.animDropOut);
-							iElemBody.removeClass(initOps.animBodyIn).addClass(initOps.animBodyOut);
+						if(scope.initOps.animation){ //Animations
+							$modal.removeClass(scope.initOps.animDropIn).addClass(scope.initOps.animDropOut);
+							$mBody.removeClass(scope.initOps.animBodyIn).addClass(scope.initOps.animBodyOut);
 						}
 						
 						$timeout(function(){
@@ -241,7 +355,7 @@
 									$document.find('body').removeClass('ngModalVisible'); //Enable document scroll
 								}
 							});
-						}, (initOps.animation) ? initOps.animDuration : 0); //After animation complete
+						}, scope.initOps.animDuration); //After animation complete
 						
 						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
@@ -249,6 +363,24 @@
 					/* Get modal states */
 					scope.controls.getStates = function(){
 						return scope.states;
+					};
+					
+					/* Gallery next image */
+					scope.controls.nextImage = function(){
+						scope.nextImage();
+						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
+					};
+					
+					/* Gallery previous image */
+					scope.controls.prevImage = function(){
+						scope.prevImage();
+						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
+					};
+					
+					/* Gallery show image */
+					scope.controls.showImage = function(index){
+						if(index < scope.gallery.length) scope.showImage(index);
+						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
 					
 					
@@ -261,17 +393,23 @@
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					
 					/* Window key press */
-					$document.bind('keydown', function(event){
-						if(event.which === keys.esc){
-							scope.controls.close();
+					$document.bind('keyup', function(event){
+						if(scope.states.isOpened){
+							if(event.which === keys.esc){
+								scope.controls.close();
+							} else if(event.which === keys.left){
+								scope.prevImage();
+							} else if(event.which === keys.right){
+								scope.nextImage();
+							}
 						}
 					});
 					
 					/* Window resize */
 					angular.element($window).bind('resize', function(){
 						if(scope.states.isOpened){
-							modalBodyAdjust();
-							if(initOps.compactClose) closeBtnAdjust(); /* Compact close button */
+							mBodyResize();
+							if(scope.initOps.compactClose) mCloseSetPos(); /* Compact close button */
 						}
 					});
 				}

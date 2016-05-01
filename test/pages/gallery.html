@@ -1,0 +1,11 @@
+<div>
+	<h1>Gallery modal</h1>
+	<button ng-click="modalControls1.open();">Open Gallery 1</button>
+	
+	<div ng-modal options="modalOptions1" controls="modalControls1" callbacks="modalCallbacks1" on-open="modal1OnOpen();" on-close="modal1OnClose();" gallery="galleryImages"></div>
+	
+	
+	<button ng-click="modalControls2.open();">Open Gallery 2</button>
+	
+	<div ng-modal options="modalOptions2" controls="modalControls2" callbacks="modalControls2" on-open="modal1OnOpen();" on-close="modal1OnClose();" gallery="galleryImages"></div>
+</div>
