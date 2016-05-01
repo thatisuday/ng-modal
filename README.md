@@ -1,4 +1,4 @@
-# ngModal  ☛ : [Preview](https://htmlpreview.github.io/?https://github.com/thatisuday/ngModal/blob/master/test/test.html)
+# ngModal  ☛ : [Preview](https://rawgit.com/thatisuday/ngModal/master/test/test.html#/multiple)
 AngularJS Modal Directive - Simple and highly customizable modal with image Gallery support.
 
 #Install
