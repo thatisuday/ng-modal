@@ -89,11 +89,11 @@ testApp.controller('galleryModalCtrl', ['$scope', '$timeout',  function($scope, 
 			'imgURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-large.jpeg'
 		},
 		{
-			'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+			'thumbURL' : 'https://static.pexels.com/photos/90928/pexels-photo-90928-small.jpeg',
 			'imgURL' : 'https://static.pexels.com/photos/90928/pexels-photo-90928-large.jpeg'
 		},
 		{
-			'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+			'thumbURL' : 'https://static.pexels.com/photos/90912/pexels-photo-90912-small.jpeg',
 			'imgURL' : 'https://static.pexels.com/photos/90912/pexels-photo-90912-large.jpeg'
 		},
 		{'imgURL' : 'https://static.pexels.com/photos/90442/pexels-photo-90442-large.jpeg'},
@@ -137,6 +137,8 @@ testApp.controller('galleryModalCtrl', ['$scope', '$timeout',  function($scope, 
 	
 	$scope.modalOptions2 = {
 		flat : 'pomegranate',
-		animImage : 'zoomInUp'
+		animImage : 'zoomInUp',
+		prevIcon : 'ion-chevron-left',
+		nextIcon : 'ion-chevron-right'
 	};
 }]);

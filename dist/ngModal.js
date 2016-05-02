@@ -42,6 +42,8 @@
 			animBodyOut : 'fadeOut',
 			animDuration : 300,
 			
+			prevIcon : '_prev_icon',
+			nextIcon : '_next_icon',
 			thumbs : true,
 			thumbsLength : 5,
 			animImage : 'fadeIn'
@@ -89,8 +91,8 @@
 								<div ng-repeat="img in gallery" ng-class="{current:($index == currImgIndex)}" ng-click="showImage($index);" style="background-image:url({{img.thumbURL || img.imgURL}});"></div>\
 							</div>\
 						</div>\
-						<div class="_prev _prev_icon" ng-click="prevImage();"></div>\
-						<div class="_next _next_icon" ng-click="nextImage();"></div>\
+						<div class="_prev {{initOps.prevIcon}}" ng-click="prevImage();"></div>\
+						<div class="_next {{initOps.nextIcon}}" ng-click="nextImage();"></div>\
 					');
 				}
 				

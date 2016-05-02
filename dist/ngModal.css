@@ -40,6 +40,7 @@ body.ngModalVisible{
 .ngModal ._prev, .ngModal ._next{
 	padding:10px;
 	color:#fff;
+	font-size:50px;
 	position:fixed;
 	top:50%;
 	z-index:2;
@@ -55,7 +56,6 @@ body.ngModalVisible{
 
 
 /* Default icons */
-._prev_icon, ._next_icon{font-size:50px;}
 ._prev_icon:before{ content:"\276C";}
 ._next_icon:before{ content:"\276D";}
 ._cross_icon:before{ content:"\26CC";}

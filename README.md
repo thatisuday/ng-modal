@@ -86,6 +86,8 @@ If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blo
 
 | Option                | Ex. value    | What it does?  |
 | --------------------- |------------- | -------------- |
+| prevIcon | '_prev_icon'  | icon class for previous image button
+| nextIcon | '_next_icon'  | icon class for next image button
 | thumbs | true  | Show thumbnails for modal gallery
 | thumbsLength | 300  | Duration of above animation (in milliseconds)
 | animImage | 'fadeIn'  | Animate.css animation class for image load
@@ -189,6 +191,9 @@ $scope.galleryImages = [
 	...
 ];
 ```
+
+> Please check **[Preview](https://rawgit.com/thatisuday/ngModal/master/test/test.html#/gallery)** of gallery. Open developers console to see what's going on.
+
 
 
 # Best practices
