@@ -56,6 +56,11 @@
 			.menu a:not(:last-child){
 				margin-right:15px;
 			}
+			.menu a.active{
+				color:#ff0000;
+				text-decoration:underline;
+				font-weight:700;
+			}
 		</style>
 	</head>
 	<body>
@@ -67,8 +72,8 @@
 		<hr/>
 		
 		<div class="menu" style="text-align:center;">
-			<a href="#/multiple">Multiple modals</a>
-			<a href="#/gallery">Gallery modal</a>
+			<a href="#/multiple" ng-class="{active:(activetab == 'multiple')}">Multiple modals</a>
+			<a href="#/gallery" ng-class="{active:(activetab == 'gallery')}">Gallery modal</a>
 		</div>
 		
 		<hr/>

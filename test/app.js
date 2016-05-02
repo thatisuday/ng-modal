@@ -10,11 +10,13 @@ var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(
 	$routeProvider
 	.when('/multiple', {
 		templateUrl : 'pages/multiple.html',
-		controller : 'multipleModalCtrl'
+		controller : 'multipleModalCtrl',
+		activetab : 'multiple'
 	})
 	.when('/gallery', {
 		templateUrl : 'pages/gallery.html',
-		controller : 'galleryModalCtrl'
+		controller : 'galleryModalCtrl',
+		activetab : 'gallery'
 	})
 	.otherwise({
 		redirectTo : '/multiple'
@@ -23,11 +25,12 @@ var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(
 
 
 
-
 /*
  * Multiple modal controller
 **/
-testApp.controller('multipleModalCtrl', ['$scope', function($scope){	
+testApp.controller('multipleModalCtrl', ['$scope', '$rootScope', '$route', '$timeout', function($scope, $rootScope, $route, $timeout){	
+	$rootScope.activetab = $route.current.activetab;
+	
 	$scope.msg1 = 'I am modal 1 message from controller.';
 	$scope.modalOptions1 = {
 		animDuration : 500,
@@ -78,7 +81,9 @@ testApp.controller('multipleModalCtrl', ['$scope', function($scope){
 /*
  * Gallery modal controller
 **/
-testApp.controller('galleryModalCtrl', ['$scope', '$timeout',  function($scope, $timeout){	
+testApp.controller('galleryModalCtrl', ['$scope', '$rootScope', '$route', '$timeout', function($scope, $rootScope, $route, $timeout){	
+	$rootScope.activetab = $route.current.activetab;
+	
 	$scope.galleryImages = [
 		{
 			'thumbURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-small.jpeg',
