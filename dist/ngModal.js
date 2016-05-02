@@ -15,6 +15,24 @@
 		right : 39
 	};
 	
+	function closest(el, classname) {
+		if(el.parentNode){
+			if(el.parentNode.className){
+				var classnames = el.parentNode.className.split(' ');
+				if(classnames.includes(classname)){
+					return true;
+				}
+				else{
+					return closest(el.parentNode, classname);
+				}
+			}else{
+				return closest(el.parentNode, classname);
+			}
+		}else{
+			return false;
+		}
+	};
+	
 	angular.module('thatisuday.modal', []).provider('ngModalOps', function(){
 		/*
 		 *	Add default options here
@@ -77,10 +95,7 @@
 				onClose : "&?"
 			},
 			compile : function(tElem, tAttr){
-				if(!tAttr.gallery){
-					tElem.append('<div class="_body animated" ng-transclude></div>');
-				}
-				else if(tAttr.gallery){
+				if(tAttr.gallery){
 					tElem.append('\
 						<div class="_body _gallery animated">\
 							<img ng-if="imageLoaded" ng-src="{{currentImg}}" class="animated" ng-class="{\'{{initOps.animImage}}\':imageAnimted, _hidden:!imageAnimted}" />\
@@ -95,7 +110,9 @@
 						<div class="_next {{initOps.nextIcon}}" ng-click="nextImage();"></div>\
 					');
 				}
-				
+				else{
+					tElem.append('<div class="_body animated" ng-transclude></div>');
+				}
 				
 				return function(scope, iElem, iAttr){
 					
@@ -410,6 +427,18 @@
 							mBodyResize();
 							if(scope.initOps.compactClose) mCloseSetPos(); /* Compact close button */
 						}
+					});
+					
+					
+					
+					
+					/////////////////////////////////////////////////////////////////////////////////////////////
+					// 				Misc 
+					/////////////////////////////////////////////////////////////////////////////////////////////
+					
+					/* Check for nested modal */
+					$timeout(function(){
+						if(closest($modal[0], 'ngModal')) $modal.css({'position':'absolute'});
 					});
 				}
 			}
