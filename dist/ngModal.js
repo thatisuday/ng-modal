@@ -20,7 +20,6 @@
 		 *	Add default options here
 		**/
 		var defOps = {
-			type : 'normal',
 			closable : false,
 			compactClose : false,
 			fullscreen : false,
@@ -44,7 +43,8 @@
 			animDuration : 300,
 			
 			thumbs : true,
-			thumbsLength : 5
+			thumbsLength : 5,
+			animImage : 'fadeIn'
 		};
 		
 		return {
@@ -81,7 +81,7 @@
 				else if(tAttr.gallery){
 					tElem.append('\
 						<div class="_body _gallery animated">\
-							<img ng-if="imageLoaded" ng-src="{{currentImg}}" class="animated" ng-class="{fadeIn:imageAnimted, _hidden:!imageAnimted}" />\
+							<img ng-if="imageLoaded" ng-src="{{currentImg}}" class="animated" ng-class="{\'{{initOps.animImage}}\':imageAnimted, _hidden:!imageAnimted}" />\
 							<div ng-if="!imageLoaded" class="_spinner"></div>\
 						</div>\
 						<div ng-if="initOps.thumbs" class="_thumbnails_conatainer" style="width:{{initOps.thumbsLength*40}}px;">\
@@ -136,8 +136,10 @@
 					
 					
 					//Gallery functions
+					var defer;
 					scope.loadImage = function(index){
-						var defer = $q.defer();
+						if(defer) defer.reject();
+						defer = $q.defer();
 						
 						scope.states.imgLoading = true; //Add a modal state
 						scope.imageAnimted = false; //For image load animation
@@ -154,9 +156,6 @@
 						image.onload = function(){
 							scope.gallery[index].cached = true;
 							defer.resolve(index); //Resolve loadImage promise
-						};
-						image.onerror = function(){
-							defer.reject(index); //Reject loadImage promise
 						};
 						
 						scope.imageLoaded = false;
@@ -368,13 +367,11 @@
 					/* Gallery next image */
 					scope.controls.nextImage = function(){
 						scope.nextImage();
-						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
 					
 					/* Gallery previous image */
 					scope.controls.prevImage = function(){
 						scope.prevImage();
-						if(!scope.$$phase && !scope.$root.$$phase) scope.$apply();
 					};
 					
 					/* Gallery show image */

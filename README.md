@@ -37,13 +37,14 @@ var testApp = angular.module('testApp', ['thatisuday.modal']);
 # Directive
 ## Code structure
 ```
-<div ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" on-open="modalOnOpen();" on-close="modalOnClose();"></div>
+<div ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" on-open="modalOnOpen();" on-close="modalOnClose();"></div>
 ```
 ```
-<ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" on-open="modalOnOpen();" on-close="modalOnClose();"></ng-modal>
+<ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" on-open="modalOnOpen();" on-close="modalOnClose();"></ng-modal>
 ```
-**_modalOptions_**, **_modalControls_** and **_modalCallbacks_** are models `(json objects)` bound to controller scope `($scope)`
+**_modalOptions_**, **_modalControls_**, **_modalCallbacks_** and **_galleryImages_** are models `(json objects)` bound to controller scope `($scope)`
 
+>####All above models attributes are optional.
 
 
 ## Options
@@ -65,20 +66,30 @@ If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blo
 | closable | true | Modal can be closed by clicking on modal backdrop
 | compactClose | false | Modal close button will be placed at right-top corder of modal body
 | fullscreen | false | Modal body will take entire browser viewport
-| closeIcon | '_cross' | Close button icon class, ex. `fa fa-times`
+| closeIcon | '_cross_icon' | Close button icon class, ex. `fa fa-times`
 | flat | 'forest' | Flat background color of modal. Try these options `red`, `lynch`, `brown`, `orange`, `amber`, `yellow`, `pear`, `forest`, `green`, `persian_green`, `egg_blue`, `cerulean_cerulean`, `dodger_blue`, `san_marino`, `purple`, `seance`, `smaranth`, `pomegranate`
 | width | '700px' | Width of modal body
 | height | '400px' | Height of modal body
 | padding | '20px 30px' | Padding of modal body
 | borderRadius | '3px' | Border radius of modal body
 | backdrop | 'rgba(0,0,0,0.75)' | Backdrop background color
+| background | '#fff' | Background color of modal body
 | zIndex | '9999' | z-index of modal, useful in case of multiple modals
 | animation | true | Animate modal entrance and exit (if set to `false`, below options will not work)
 | animDropIn | 'fadeIn' | `Animate.css` class for modal backdrop entrance (when modal opens)
 | animDropOut | 'fadeOut' | `Animate.css` class for modal backdrop exit (when modal closes)
 | animBodyIn | 'zoomIn' | `Animate.css` class for modal body entrance (when modal opens)
 | animBodyOut | 'fadeOut' | `Animate.css` class for modal body exit (when modal closes)
-| animDuration | 300  | Duration of above animation (in milliseconds)
+
+
+**Extra options for Image Gallery**
+
+| Option                | Ex. value    | What it does?  |
+| --------------------- |------------- | -------------- |
+| thumbs | true  | Show thumbnails for modal gallery
+| thumbsLength | 300  | Duration of above animation (in milliseconds)
+| animImage | 'fadeIn'  | Animate.css animation class for image load
+
 
 **Example**
 ```
@@ -110,6 +121,13 @@ $scope.modalControls.open();
 | close | none | Closes the model
 | getStates | none | Returns model states json object (ex. `{isTouched:false, isOpened:false, isClosed:true}`)
 
+**Extra methods for Image Gallery**
+
+| Method                | Arguments    | What it does?  |
+| --------------------- |------------- | -------------- |
+| nextImage | none | Load next image in gallery
+| prevImage | none | Load prev image in gallery
+| showImage | index (interger) | Show image at `index` position in gallery. index[0 - images.length]
 
 
 ## Events (Callbacks)
@@ -126,13 +144,12 @@ $scope.modalCallbacks.onClose = function(){
 }
 ```
 
-| Callback                | When it fires?  |
+| Callback               | When it fires?  |
 | ---------------------- |---------------- |
 | onOpen | When modal opens
 | onClose | When modal closes
 
 **onOpen** and **OnClose** callbacks can also execute functions from inline `on-open` and `on-close` attributes, see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above. For example, 
-
 ```
 //In controller
 $scope.modalOnOpen = function(){
@@ -142,6 +159,37 @@ $scope.modalOnClose = function(){
 	console.log('Modal closed. Inline callback.');
 }
 ```
+
+**Extra callbacks for Image Gallery**
+
+| Callback               | When it fires?  |
+| ---------------------- |---------------- |
+| onPrev | When previous button is clicked
+| onPrevDone | When previous image is loaded
+| onNext | When next button is clicked
+| onNextDone | When next image is loaded
+
+
+
+## Gallery (Gallery images)
+If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above, you can see `gallery` attribute with value `galleryImages`. **galleryImages** is a model that must be bound to parent scope which `feeds images` to the gallery. For example,
+
+```
+$scope.galleryImages = [
+	{
+		'thumbURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-small.jpeg',
+		'imgURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-large.jpeg'
+	},
+	{
+		'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+		'imgURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-large.jpeg'
+	}
+	{'imgURL' : 'https://static.pexels.com/photos/90442/pexels-photo-90442-large.jpeg'},
+	{'imgURL' : 'https://static.pexels.com/photos/87065/pexels-photo-87065-large.jpeg'},
+	...
+];
+```
+
 
 # Best practices
 1. Modals can be opened on top of each other. But use `zIndex` option to put them on top of each other else they will be shown in order of their DOM appearances.

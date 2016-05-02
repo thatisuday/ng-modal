@@ -80,15 +80,27 @@ testApp.controller('multipleModalCtrl', ['$scope', function($scope){
 **/
 testApp.controller('galleryModalCtrl', ['$scope', '$timeout',  function($scope, $timeout){	
 	$scope.galleryImages = [
-		{thumbURL : 'https://static.pexels.com/photos/72479/pexels-photo-72479-medium.jpeg', 'imgURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/90928/pexels-photo-90928-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/90912/pexels-photo-90912-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/90442/pexels-photo-90442-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/87065/pexels-photo-87065-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/88139/pexels-photo-88139-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/87001/pexels-photo-87001-large.jpeg' + '?' + Math.random()},
-		{'imgURL' : 'https://static.pexels.com/photos/90894/pexels-photo-90894-large.jpeg' + '?' + Math.random()}
+		{
+			'thumbURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-small.jpeg',
+			'imgURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-large.jpeg'
+		},
+		{
+			'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+			'imgURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-large.jpeg'
+		},
+		{
+			'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+			'imgURL' : 'https://static.pexels.com/photos/90928/pexels-photo-90928-large.jpeg'
+		},
+		{
+			'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+			'imgURL' : 'https://static.pexels.com/photos/90912/pexels-photo-90912-large.jpeg'
+		},
+		{'imgURL' : 'https://static.pexels.com/photos/90442/pexels-photo-90442-large.jpeg'},
+		{'imgURL' : 'https://static.pexels.com/photos/87065/pexels-photo-87065-large.jpeg'},
+		{'imgURL' : 'https://static.pexels.com/photos/88139/pexels-photo-88139-large.jpeg'},
+		{'imgURL' : 'https://static.pexels.com/photos/87001/pexels-photo-87001-large.jpeg'},
+		{'imgURL' : 'https://static.pexels.com/photos/90894/pexels-photo-90894-large.jpeg'}
 	];
 	
 	$scope.modalOptions1 = {
@@ -124,6 +136,7 @@ testApp.controller('galleryModalCtrl', ['$scope', '$timeout',  function($scope, 
 	};
 	
 	$scope.modalOptions2 = {
-		flat : 'pomegranate'
+		flat : 'pomegranate',
+		animImage : 'zoomInUp'
 	};
 }]);
