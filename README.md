@@ -37,12 +37,12 @@ var testApp = angular.module('testApp', ['thatisuday.modal']);
 # Directive
 ## Code structure
 ```
-<div ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" on-open="modalOnOpen();" on-close="modalOnClose();"></div>
+<div ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" video="{{videoEmbedUrl}}" on-open="modalOnOpen();" on-close="modalOnClose();"></div>
 ```
 ```
-<ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" on-open="modalOnOpen();" on-close="modalOnClose();"></ng-modal>
+<ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" video="{{videoEmbedUrl}}" on-open="modalOnOpen();" on-close="modalOnClose();"></ng-modal>
 ```
-**_modalOptions_**, **_modalControls_**, **_modalCallbacks_** and **_galleryImages_** are models `(json objects)` bound to controller scope `($scope)`
+**_modalOptions_**, **_modalControls_**, **_modalCallbacks_** and **_galleryImages_** are models `(json objects)` bound to controller scope `($scope)`.
 
 >####All above models attributes are optional.
 
@@ -193,6 +193,14 @@ $scope.galleryImages = [
 ```
 
 > Please check **[Preview](https://rawgit.com/thatisuday/ngModal/master/test/test.html#/gallery)** of gallery. Open developers console to see what's going on.
+
+
+
+## Video (Embed)
+If you see _[Directive Code Structure](https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure)_ above, you can see `video` attribute with value `{{videoEmbedUrl}}`. **videoEmbedUrl** is a model that must be a string. You can also add raw embed url string like for example
+```
+<div ng-modal controls="modalControls" video="https://www.youtube.com/embed/c7nRTF2SowQ"></div>
+```
 
 
 
