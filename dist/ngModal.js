@@ -15,6 +15,7 @@
 		right : 39
 	};
 	
+	//jQuery .closest like
 	function closest(el, classname) {
 		if(el.parentNode){
 			if(el.parentNode.className){
@@ -38,8 +39,8 @@
 		 *	Add default options here
 		**/
 		var defOps = {
-			closable : false,
-			compactClose : false,
+			closable : true,
+			compactClose : true,
 			fullscreen : false,
 			closeIcon : '_cross_icon',
 			
@@ -76,7 +77,7 @@
 			}
 		}
 	})
-	.directive('ngModal', ['$timeout', '$q', '$document', '$window', 'ngModalOps', function($timeout, $q, $document, $window, ngModalOps){
+	.directive('ngModal', ['$timeout', '$q', '$document', '$window', '$sce', 'ngModalOps', function($timeout, $q, $document, $window, $sce, ngModalOps){
 		return {
 			restrict : 'AE',
 			transclude : true,
@@ -87,6 +88,7 @@
 			',
 			replace : true,
 			scope : {
+				video : '@?',
 				options : '=?',
 				controls : '=?',
 				callbacks : '=?',
@@ -110,6 +112,9 @@
 						<div class="_next {{initOps.nextIcon}}" ng-click="nextImage();"></div>\
 					');
 				}
+				else if(tAttr.video){
+					tElem.append('<div class="_body _video animated"><iframe ng-src="{{videoURL}}"></iframe></div>');
+				}
 				else{
 					tElem.append('<div class="_body animated" ng-transclude></div>');
 				}
@@ -128,26 +133,35 @@
 							return {
 								windowWidth : window.innerWidth,
 								windowHeight : window.innerHeight,
-								iElemBodyWidth : mBody.offsetWidth,
-								iElemBodyHeight : mBody.offsetHeight
+								mBodyWidth : mBody.offsetWidth,
+								mBodyHeight : mBody.offsetHeight
 							}
 						},
 						mBodyResize = function(){ // Adjust modal body position
 							var dim = getDim();
-							if(dim.iElemBodyWidth < dim.windowWidth){
-								$mBody.css({'left':'50%', 'margin-left':'-' + (dim.iElemBodyWidth/2) + 'px'});
-							} else{ $mBody.css({'left':'0', 'margin-left':'0'}); }
-							
-							if(dim.iElemBodyHeight < dim.windowHeight){
-								$mBody.css({'top':'50%', 'margin-top':'-' + (dim.iElemBodyHeight/2) + 'px'});
-							} else{ $mBody.css({'top':'0', 'margin-top':'0'}); }
+							if(dim.mBodyWidth < dim.windowWidth || dim.mBodyHeight < dim.windowHeight){
+								$mBody.css({
+									'left' : '50%',
+									'margin-left' : '-' + (dim.mBodyWidth/2) + 'px',
+									'top' : '50%',
+									'margin-top' : '-' + (dim.mBodyHeight/2) + 'px'
+								});
+							}
+							else{
+								$mBody.css({
+									'left' : '0',
+									'margin-left' : '0',
+									'top' : '0',
+									'margin-top' : '0'
+								});
+							}
 						},
 						mCloseSetPos = function(){ // Adjust close icon position
 							var dim = getDim();
-							if(dim.iElemBodyWidth < dim.windowWidth || dim.iElemBodyHeight < dim.windowWidth){
+							if(dim.mBodyWidth < dim.windowWidth || dim.mBodyHeight < dim.windowWidth){
 								$mClose.css({
-									'right' : ((dim.windowWidth - dim.iElemBodyWidth) / 2 - 25)+ 'px',
-									'top' : ((dim.windowHeight - dim.iElemBodyHeight) / 2 - 30)+ 'px'
+									'right' : ((dim.windowWidth - dim.mBodyWidth) / 2 - 25) + 'px',
+									'top' : ((dim.windowHeight - dim.mBodyHeight) / 2 - 30) + 'px'
 								});
 							}
 						}
@@ -171,7 +185,6 @@
 						
 						var image = new Image();
 						image.src = scope.gallery[index].imgURL;
-						
 						image.onload = function(){
 							scope.gallery[index].cached = true;
 							defer.resolve(index); //Resolve loadImage promise
@@ -198,7 +211,10 @@
 								scope.thumbScroll = scope.thumbScroll || 0;
 								if(scope.gallery.length > scope.initOps.thumbsLength){
 									if((scope.currImgIndex + 2) > scope.initOps.thumbsLength){
-										if((scope.currImgIndex + 1) != scope.gallery.length){
+										if((scope.currImgIndex + 1) == scope.gallery.length){
+											scope.thumbScroll = -40 * ((scope.currImgIndex + 1) - scope.initOps.thumbsLength);
+										}
+										else{
 											scope.thumbScroll = -40 * ((scope.currImgIndex + 2) - scope.initOps.thumbsLength);
 										}
 									}
@@ -242,7 +258,6 @@
 					
 					
 					
-					
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// 				Modal states
 					/////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,12 +275,25 @@
 					
 					
 					
+					/////////////////////////////////////////////////////////////////////////////////////////////
+					// 			Set options
+					/////////////////////////////////////////////////////////////////////////////////////////////
+					scope.initOps = angular.extend({}, ngModalOps, scope.options);
+					if(iAttr.gallery && scope.gallery){
+						scope.initOps.closable = false;
+						scope.initOps.compactClose = false;
+					}
+					else if(scope.initOps.fullscreen){
+						scope.initOps.compactClose = false;
+					}
+					
+					
+					
+					
 					
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// 			Perform options actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
-					scope.initOps = angular.extend({}, ngModalOps, scope.options);
-					
 					/* Modal closable on click outside of modal body */
 					if(scope.initOps.closable){
 						$modal.css({'cursor':'pointer'});
@@ -287,21 +315,33 @@
 					} else{scope.initOps.animDuration = 0;}
 					
 					/* Set basic css style */
-					if(scope.initOps.backdrop) $modal.css({'background-color':scope.initOps.backdrop});
-					if(scope.initOps.zIndex) $modal.css({'z-index':scope.initOps.zIndex});
-					if(scope.initOps.background) $mBody.css({'background-color':scope.initOps.background});
-					if(scope.initOps.width) $mBody.css({'width':scope.initOps.width});
-					if(scope.initOps.height) $mBody.css({'height':scope.initOps.height});
-					if(scope.initOps.padding) $mBody.css({'padding':scope.initOps.padding});
-					if(scope.initOps.borderRadius) $mBody.css({'border-radius':scope.initOps.borderRadius});
-					if(scope.initOps.top) $mBody.css({'top':scope.initOps.top});
-					if(scope.initOps.left) $mBody.css({'left':scope.initOps.left});
+					$modal.css({
+						'background-color' : scope.initOps.backdrop,
+						'z-index' : scope.initOps.zIndex
+					});
+					$mBody.css({
+						'background-color' : scope.initOps.background,
+						'width' : scope.initOps.width,
+						'height' : scope.initOps.height,
+						'padding' : scope.initOps.padding,
+						'border-radius' : scope.initOps.borderRadius,
+						'top' : scope.initOps.top,
+						'left' : scope.initOps.left
+					});
 					
 					/* Full screen modal */
 					if(scope.initOps.fullscreen){
-						scope.initOps.compactClose = false;
-						$mBody.css({'width':'100%', 'min-height':'100%', 'height':'auto', 'top':'0', 'left':'0', 'border-radius':'0px'});
-						$mClose.css({'color':'#333'});
+						$mBody.css({
+							'width' : '100%',
+							'min-height' : '100%',
+							'height' : 'auto',
+							'top' : '0',
+							'left' : '0',
+							'border-radius' : '0px'
+						});
+						$mClose.css({
+							'color' : '#333'
+						});
 					}
 					
 					/* Flat modal */
@@ -312,8 +352,24 @@
 					/* Modal gallery */
 					if(iAttr.gallery && scope.gallery){
 						var dim = getDim();
-						$mBody.css({'background-color':'transparent', 'width':'calc(100% - 100px)', 'height':'calc(100% - 100px)'});
+						$mBody.css({
+							'background-color' : 'transparent',
+							'width' : 'calc(100% - 100px)',
+							'height' : 'calc(100% - 100px)'
+						});
 						scope.showImage(); //Show gallery image
+					}
+					
+					/* Modal video */
+					if(iAttr.video && scope.video){
+						var dim = getDim();
+						scope.videoURL = $sce.trustAsResourceUrl(scope.video);
+						
+						$mBody.css({
+							'height' : (dim.mBodyWidth / 100) * 56.25 + 'px',
+							'border-radius' : '0px',
+							'padding' : '0px'
+						});
 					}
 					
 					
@@ -340,7 +396,7 @@
 						}
 						
 						$timeout(function(){ //Set modal body position
-							mBodyResize();
+							if(!scope.initOps.fullscreen) mBodyResize();
 							if(scope.initOps.compactClose) mCloseSetPos(); /* Compact close button */
 						});
 						
@@ -403,7 +459,6 @@
 					
 					
 					
-					
 					/////////////////////////////////////////////////////////////////////////////////////////////
 					// 				Browser actions
 					/////////////////////////////////////////////////////////////////////////////////////////////
@@ -424,10 +479,11 @@
 					/* Window resize */
 					angular.element($window).bind('resize', function(){
 						if(scope.states.isOpened){
-							mBodyResize();
+							if(!scope.initOps.fullscreen) mBodyResize();
 							if(scope.initOps.compactClose) mCloseSetPos(); /* Compact close button */
 						}
 					});
+					
 					
 					
 					

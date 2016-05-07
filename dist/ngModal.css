@@ -75,6 +75,21 @@ body.ngModalVisible{
 
 
 /**************************************************/
+/**************** Embed Video *********************/
+/**************************************************/
+.ngModal ._body._video iframe{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border:none;
+	vertical-align:bottom;
+}
+
+
+
+/**************************************************/
 /************** Modal Gallery *********************/
 /**************************************************/
 .ngModal ._body._gallery img{
@@ -113,6 +128,9 @@ body.ngModalVisible{
 	width:100%;
 	font-size:0;
 	white-space:nowrap;
+	transition:margin 0.3s ease-in-out;
+	-webkit-transition:margin 0.3s ease-in-out;
+	-moz-transition:margin 0.3s ease-in-out;
 }
 .ngModal ._thumbnails>div{
 	width: 24px;

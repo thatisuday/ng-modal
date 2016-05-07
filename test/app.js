@@ -18,6 +18,11 @@ var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(
 		controller : 'galleryModalCtrl',
 		activetab : 'gallery'
 	})
+	.when('/video', {
+		templateUrl : 'pages/video.html',
+		controller : 'videoModalCtrl',
+		activetab : 'video'
+	})
 	.otherwise({
 		redirectTo : '/multiple'
 	});
@@ -31,7 +36,7 @@ var testApp = angular.module('testApp', ['thatisuday.modal', 'ngRoute']).config(
 testApp.controller('multipleModalCtrl', ['$scope', '$rootScope', '$route', '$timeout', function($scope, $rootScope, $route, $timeout){	
 	$rootScope.activetab = $route.current.activetab;
 	
-	$scope.msg1 = 'I am modal 1 message from controller.';
+	$scope.msg1 = 'I am simple modal.';
 	$scope.modalOptions1 = {
 		animDuration : 500,
 		width:'600px',
@@ -54,20 +59,18 @@ testApp.controller('multipleModalCtrl', ['$scope', '$rootScope', '$route', '$tim
 	}
 	
 	
-	$scope.msg2 = 'I am modal 2 message from controller.';
+	$scope.msg2 = 'I am fullscreen modal with custom close icon.';
 	$scope.modalOptions2 = {
 		animation : false,
-		closable : true,
-		compactClose : true,
-		closeIcon : 'ion-close-circled',
+		fullscreen : true,
+		background : '#fafafa',
+		closeIcon : '_fs_30 ion-ios-close-outline',
 		flat : 'forest'
 	};
 	
 	
-	$scope.msg3 = 'I am modal 3 message from controller.';
+	$scope.msg3 = 'I am simple nested modal.';
 	$scope.modalOptions3 = {
-		closable : false,
-		compactClose : true,
 		width:'600px',
 		height:'300px',
 		padding:'50px 30px',
@@ -146,4 +149,15 @@ testApp.controller('galleryModalCtrl', ['$scope', '$rootScope', '$route', '$time
 		prevIcon : 'ion-chevron-left',
 		nextIcon : 'ion-chevron-right'
 	};
+}]);
+
+
+
+
+/*
+ * Video modal controller
+**/
+testApp.controller('videoModalCtrl', ['$scope', '$rootScope', '$route', '$timeout', function($scope, $rootScope, $route, $timeout){	
+	$rootScope.activetab = $route.current.activetab;
+	
 }]);
