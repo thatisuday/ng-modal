@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ngmodal by thatisuday</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ngmodal</h1>
+      <h2 class="project-tagline">AngularJS Modal Directive - Simple and highly customizable modal with photo gallery support.</h2>
+      <a href="https://github.com/thatisuday/ngModal" class="btn">View on GitHub</a>
+      <a href="https://github.com/thatisuday/ngModal/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/thatisuday/ngModal/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ngmodal----preview" class="anchor" href="#ngmodal----preview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ngModal  ☛ : <a href="https://rawgit.com/thatisuday/ngModal/master/test/test.html#/multiple">Preview</a>
+</h1>
+
+<p>AngularJS Modal Directive - Simple and highly customizable modal with image Gallery support.</p>
+
+<h1>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h1>
+
+<h3>
+<a id="using-bower" class="anchor" href="#using-bower" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using bower</h3>
+
+<pre><code>bower install thatisuday-ngmodal
+</code></pre>
+
+<h3>
+<a id="manual-install" class="anchor" href="#manual-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Manual install</h3>
+
+<h4>
+<a id="required-files" class="anchor" href="#required-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Required files</h4>
+
+<p><code>ngModal.js</code> and <code>ngModal.css</code></p>
+
+<h4>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h4>
+
+<p><code>AngularJS</code> <a href="https://developers.google.com/speed/libraries/#angularjs">get here</a> and <code>animate.css</code> <a href="https://daneden.github.io/animate.css/">get here</a></p>
+
+<h3>
+<a id="include-order-inside-headhead" class="anchor" href="#include-order-inside-headhead" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include order (inside <code>&lt;head&gt;&lt;head/&gt;</code>)</h3>
+
+<pre><code>&lt;!-- AngularJS --&gt;
+&lt;script src="../bower_components/angular/angular.js"&gt;&lt;/script&gt;
+
+&lt;!-- Animate.css --&gt;
+&lt;link href="../bower_components/animate.css/animate.css" rel="stylesheet" type="text/css"/&gt;
+
+&lt;!-- ngModal --&gt;
+&lt;script src="../dist/ngModal.js"&gt;&lt;/script&gt;
+&lt;link href="../dist/ngModal.css" rel="stylesheet" type="text/css"/&gt;
+</code></pre>
+
+<h3>
+<a id="configure-app" class="anchor" href="#configure-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure app</h3>
+
+<pre><code>var testApp = angular.module('testApp', ['thatisuday.modal']);
+</code></pre>
+
+<h1>
+<a id="directive" class="anchor" href="#directive" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Directive</h1>
+
+<h2>
+<a id="code-structure" class="anchor" href="#code-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code structure</h2>
+
+<pre><code>&lt;div ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" video="{{videoEmbedUrl}}" on-open="modalOnOpen();" on-close="modalOnClose();"&gt;&lt;/div&gt;
+</code></pre>
+
+<pre><code>&lt;ng-modal options="modalOptions" controls="modalControls" callbacks="modalCallbacks" gallery="galleryImages" video="{{videoEmbedUrl}}" on-open="modalOnOpen();" on-close="modalOnClose();"&gt;&lt;/ng-modal&gt;
+</code></pre>
+
+<p><strong><em>modalOptions</em></strong>, <strong><em>modalControls</em></strong>, <strong><em>modalCallbacks</em></strong> and <strong><em>galleryImages</em></strong> are models <code>(json objects)</code> bound to controller scope <code>($scope)</code>.</p>
+
+<blockquote>
+<h4>
+<a id="all-above-models-attributes-are-optional" class="anchor" href="#all-above-models-attributes-are-optional" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>All above models attributes are optional.</h4>
+</blockquote>
+
+<h2>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Options</h2>
+
+<p><strong>Modal options can be set at two levels.</strong></p>
+
+<h4>
+<a id="1-config-directive-options-provider" class="anchor" href="#1-config-directive-options-provider" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Config directive options provider</h4>
+
+<pre><code>var testApp = angular.module('testApp', ['thatisuday.modal']).config(function(ngModalOpsProvider){
+    ngModalOpsProvider.setOptions({
+        bla:bleh,
+        ...
+    });
+});
+</code></pre>
+
+<h4>
+<a id="2-using-modaloptions-model" class="anchor" href="#2-using-modaloptions-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. Using <strong><em>modalOptions</em></strong> model</h4>
+
+<p>If you see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above, you can see <code>options</code> attribute with value <code>modalOptions</code>. <strong>modalOptions</strong> is a model that must be bound to parent scope which <em>provides options</em> for your modal. For example, <code>$scope.modalOptions = {bla:bleh,...}</code></p>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Ex. value</th>
+<th>What it does?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>closable</td>
+<td>true</td>
+<td>Modal can be closed by clicking on modal backdrop</td>
+</tr>
+<tr>
+<td>compactClose</td>
+<td>false</td>
+<td>Modal close button will be placed at right-top corder of modal body</td>
+</tr>
+<tr>
+<td>fullscreen</td>
+<td>false</td>
+<td>Modal body will take entire browser viewport</td>
+</tr>
+<tr>
+<td>closeIcon</td>
+<td>'_cross_icon'</td>
+<td>Close button icon class, ex. <code>fa fa-times</code>
+</td>
+</tr>
+<tr>
+<td>flat</td>
+<td>'forest'</td>
+<td>Flat background color of modal. Try these options <code>red</code>, <code>lynch</code>, <code>brown</code>, <code>orange</code>, <code>amber</code>, <code>yellow</code>, <code>pear</code>, <code>forest</code>, <code>green</code>, <code>persian_green</code>, <code>egg_blue</code>, <code>cerulean_cerulean</code>, <code>dodger_blue</code>, <code>san_marino</code>, <code>purple</code>, <code>seance</code>, <code>smaranth</code>, <code>pomegranate</code>
+</td>
+</tr>
+<tr>
+<td>width</td>
+<td>'700px'</td>
+<td>Width of modal body</td>
+</tr>
+<tr>
+<td>height</td>
+<td>'400px'</td>
+<td>Height of modal body</td>
+</tr>
+<tr>
+<td>padding</td>
+<td>'20px 30px'</td>
+<td>Padding of modal body</td>
+</tr>
+<tr>
+<td>borderRadius</td>
+<td>'3px'</td>
+<td>Border radius of modal body</td>
+</tr>
+<tr>
+<td>backdrop</td>
+<td>'rgba(0,0,0,0.75)'</td>
+<td>Backdrop background color</td>
+</tr>
+<tr>
+<td>background</td>
+<td>'#fff'</td>
+<td>Background color of modal body</td>
+</tr>
+<tr>
+<td>zIndex</td>
+<td>'9999'</td>
+<td>z-index of modal, useful in case of multiple modals</td>
+</tr>
+<tr>
+<td>animation</td>
+<td>true</td>
+<td>Animate modal entrance and exit (if set to <code>false</code>, below options will not work)</td>
+</tr>
+<tr>
+<td>animDropIn</td>
+<td>'fadeIn'</td>
+<td>
+<code>Animate.css</code> class for modal backdrop entrance (when modal opens)</td>
+</tr>
+<tr>
+<td>animDropOut</td>
+<td>'fadeOut'</td>
+<td>
+<code>Animate.css</code> class for modal backdrop exit (when modal closes)</td>
+</tr>
+<tr>
+<td>animBodyIn</td>
+<td>'zoomIn'</td>
+<td>
+<code>Animate.css</code> class for modal body entrance (when modal opens)</td>
+</tr>
+<tr>
+<td>animBodyOut</td>
+<td>'fadeOut'</td>
+<td>
+<code>Animate.css</code> class for modal body exit (when modal closes)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Extra options for Image Gallery</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Ex. value</th>
+<th>What it does?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prevIcon</td>
+<td>'_prev_icon'</td>
+<td>icon class for previous image button</td>
+</tr>
+<tr>
+<td>nextIcon</td>
+<td>'_next_icon'</td>
+<td>icon class for next image button</td>
+</tr>
+<tr>
+<td>thumbs</td>
+<td>true</td>
+<td>Show thumbnails for modal gallery</td>
+</tr>
+<tr>
+<td>thumbsLength</td>
+<td>300</td>
+<td>Duration of above animation (in milliseconds)</td>
+</tr>
+<tr>
+<td>animImage</td>
+<td>'fadeIn'</td>
+<td>Animate.css animation class for image load</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Example</strong></p>
+
+<pre><code>$scope.modalOptions = {
+    closable : true,
+    closeIcon : 'ion-close-circled',
+    width:'600px',
+    height:'auto'
+};
+</code></pre>
+
+<h2>
+<a id="controls-methods" class="anchor" href="#controls-methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Controls (Methods)</h2>
+
+<p>If you see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above, you can see <code>controls</code> attribute with value <code>modalControls</code>. <strong>modalControls</strong> is a model that must be bound to parent scope which <em>provides a gateway</em> to control model actions. For example,</p>
+
+<pre><code>//In view
+&lt;button ng-click="modalControls.open();"&gt;Open Modal&lt;/button&gt;
+&lt;button ng-click="modalControls.close();"&gt;Close Modal&lt;/button&gt;
+</code></pre>
+
+<p><strong>AND/OR</strong></p>
+
+<pre><code>//In controller
+$scope.modalControls = {};
+$scope.modalControls.open();
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Arguments</th>
+<th>What it does?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>open</td>
+<td>none</td>
+<td>Opens the model</td>
+</tr>
+<tr>
+<td>close</td>
+<td>none</td>
+<td>Closes the model</td>
+</tr>
+<tr>
+<td>getStates</td>
+<td>none</td>
+<td>Returns model states json object (ex. <code>{isTouched:false, isOpened:false, isClosed:true}</code>)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Extra methods for Image Gallery</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Arguments</th>
+<th>What it does?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nextImage</td>
+<td>none</td>
+<td>Load next image in gallery</td>
+</tr>
+<tr>
+<td>prevImage</td>
+<td>none</td>
+<td>Load prev image in gallery</td>
+</tr>
+<tr>
+<td>showImage</td>
+<td>index (interger)</td>
+<td>Show image at <code>index</code> position in gallery. index[0 - images.length]</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="events-callbacks" class="anchor" href="#events-callbacks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Events (Callbacks)</h2>
+
+<p>If you see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above, you can see <code>callbacks</code> attribute with value <code>modalCallbacks</code>. <strong>modalCallbacks</strong> is a model that must be bound to parent scope which <em>feeds callback methods</em> to be executed after some event occurs. For example,</p>
+
+<pre><code>//In controller
+$scope.modalCallbacks = {};
+$scope.modalCallbacks.onOpen = function(){
+    console.log('Modal opened.');
+}
+$scope.modalCallbacks.onClose = function(){
+    console.log('Modal closed.');
+}
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Callback</th>
+<th>When it fires?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onOpen</td>
+<td>When modal opens</td>
+</tr>
+<tr>
+<td>onClose</td>
+<td>When modal closes</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>onOpen</strong> and <strong>OnClose</strong> callbacks can also execute functions from inline <code>on-open</code> and <code>on-close</code> attributes, see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above. For example, </p>
+
+<pre><code>//In controller
+$scope.modalOnOpen = function(){
+    console.log('Modal opened. Inline callback.');
+}
+$scope.modalOnClose = function(){
+    console.log('Modal closed. Inline callback.');
+}
+</code></pre>
+
+<p><strong>Extra callbacks for Image Gallery</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Callback</th>
+<th>When it fires?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onPrev</td>
+<td>When previous button is clicked</td>
+</tr>
+<tr>
+<td>onPrevDone</td>
+<td>When previous image is loaded</td>
+</tr>
+<tr>
+<td>onNext</td>
+<td>When next button is clicked</td>
+</tr>
+<tr>
+<td>onNextDone</td>
+<td>When next image is loaded</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="gallery-gallery-images" class="anchor" href="#gallery-gallery-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gallery (Gallery images)</h2>
+
+<p>If you see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above, you can see <code>gallery</code> attribute with value <code>galleryImages</code>. <strong>galleryImages</strong> is a model that must be bound to parent scope which <code>feeds images</code> to the gallery. For example,</p>
+
+<pre><code>$scope.galleryImages = [
+    {
+        'thumbURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-small.jpeg',
+        'imgURL' : 'https://static.pexels.com/photos/72479/pexels-photo-72479-large.jpeg'
+    },
+    {
+        'thumbURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-small.jpeg',
+        'imgURL' : 'https://static.pexels.com/photos/90916/pexels-photo-90916-large.jpeg'
+    }
+    {'imgURL' : 'https://static.pexels.com/photos/90442/pexels-photo-90442-large.jpeg'},
+    {'imgURL' : 'https://static.pexels.com/photos/87065/pexels-photo-87065-large.jpeg'},
+    ...
+];
+</code></pre>
+
+<blockquote>
+<p>Please check <strong><a href="https://rawgit.com/thatisuday/ngModal/master/test/test.html#/gallery">Preview</a></strong> of gallery. Open developers console to see what's going on.</p>
+</blockquote>
+
+<h2>
+<a id="video-embed" class="anchor" href="#video-embed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Video (Embed)</h2>
+
+<p>If you see <em><a href="https://github.com/thatisuday/ngModal/blob/master/README.md#code-structure">Directive Code Structure</a></em> above, you can see <code>video</code> attribute with value <code>{{videoEmbedUrl}}</code>. <strong>videoEmbedUrl</strong> is a model that must be a string. You can also add raw embed url string like for example</p>
+
+<pre><code>&lt;div ng-modal controls="modalControls" video="https://www.youtube.com/embed/c7nRTF2SowQ"&gt;&lt;/div&gt;
+</code></pre>
+
+<h1>
+<a id="best-practices" class="anchor" href="#best-practices" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Best practices</h1>
+
+<ol>
+<li>Modals can be opened on top of each other. But use <code>zIndex</code> option to put them on top of each other else they will be shown in order of their DOM appearances.</li>
+<li>You can nest modal inside other. Nested modal will have backdrop inside parent modal. You must give proper <code>width</code> and <code>height</code> to child modal. Also set <code>compactClose</code> option to <code>true</code> else close button will not show up for child modal. You should avoid nesting gallery modals.</li>
+<li>Play with <strong><a href="https://daneden.github.io/animate.css/">Animate.css</a></strong> but do not add exit animation-class like <code>zoomOut</code> in entry animation-class option like <code>animBodyIn</code>.</li>
+<li>Use <code>flat</code> option for Flat UI modal, set <code>borderRadius</code> option to <code>0px</code> for good UI. <code>backdrop</code>, <code>compactClose</code> options will be useless in this case.</li>
+</ol>
+
+<h1>
+<a id="complaints--contribute" class="anchor" href="#complaints--contribute" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Complaints &amp; Contribute</h1>
+
+<p>Create an issue and mention your commits there. Don't take a fork.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/thatisuday/ngModal">Ngmodal</a> is maintained by <a href="https://github.com/thatisuday">thatisuday</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
